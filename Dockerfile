@@ -3,6 +3,7 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    UV_NO_SYNC=1 \
     UV_PROJECT_ENVIRONMENT=/app/.venv \
     VIRTUAL_ENV=/app/.venv
 
@@ -34,4 +35,4 @@ RUN uv pip install --python /app/.venv/bin/python --no-deps .
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["uv", "run", "musicai"]
+CMD ["musicai"]
