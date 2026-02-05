@@ -12,7 +12,9 @@ services:
       - ./database:/var/lib/postgresql
 
   musicai:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
     depends_on:
       - db
     volumes:

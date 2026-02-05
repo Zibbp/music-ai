@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM intel/oneapi-runtime:2025.3.1-0-devel-ubuntu24.04
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -7,6 +7,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     VIRTUAL_ENV=/app/.venv
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3.12 \
+        python3.12-venv \
+        python3.12-dev \
+        python3-pip \
         build-essential \
         ffmpeg \
         libsndfile1 \
@@ -14,18 +18,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir uv
+RUN python3.12 -m venv /opt/uv \
+    && /opt/uv/bin/pip install --no-cache-dir uv
+
+ENV PATH="/opt/uv/bin:$PATH"
 
 WORKDIR /app
 
 COPY pyproject.toml ./
 RUN uv venv /app/.venv \
-    && uv pip compile pyproject.toml --extra cpu \
-        --index https://download.pytorch.org/whl/cpu \
+    && uv pip compile pyproject.toml --extra xpu \
+        --index https://download.pytorch.org/whl/xpu \
         --index-strategy unsafe-best-match \
         -o /tmp/requirements.txt \
     && uv pip sync --python /app/.venv/bin/python \
-        --index https://download.pytorch.org/whl/cpu \
+        --index https://download.pytorch.org/whl/xpu \
         --index-strategy unsafe-best-match \
         /tmp/requirements.txt
 

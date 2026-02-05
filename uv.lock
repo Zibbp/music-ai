@@ -977,10 +977,10 @@ dependencies = [
     { name = "nnaudio" },
     { name = "numpy" },
     { name = "soundfile" },
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torchaudio", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torchaudio", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torchaudio", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "tqdm" },
     { name = "transformers" },
     { name = "x-clip" },
@@ -999,16 +999,28 @@ dependencies = [
     { name = "panns-inference" },
     { name = "pgvector" },
     { name = "psycopg", extra = ["binary"] },
-    { name = "pytorch-triton-xpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
     { name = "soundfile" },
-    { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torchaudio", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
     { name = "torchcodec" },
-    { name = "torchvision", version = "0.24.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
     { name = "tqdm" },
     { name = "transformers" },
+]
+
+[package.optional-dependencies]
+cpu = [
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torchaudio", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torchaudio", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torchvision", version = "0.24.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torchvision", version = "0.24.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+xpu = [
+    { name = "pytorch-triton-xpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torchaudio", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+    { name = "torchvision", version = "0.24.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
 ]
 
 [package.metadata]
@@ -1020,17 +1032,21 @@ requires-dist = [
     { name = "panns-inference", specifier = ">=0.1.1" },
     { name = "pgvector", specifier = ">=0.4.2" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.2" },
-    { name = "pytorch-triton-xpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = ">=3.5.0", index = "https://download.pytorch.org/whl/xpu" },
+    { name = "pytorch-triton-xpu", marker = "(sys_platform == 'linux' and extra == 'xpu') or (sys_platform == 'win32' and extra == 'xpu')", specifier = ">=3.5.0", index = "https://download.pytorch.org/whl/xpu", conflict = { package = "musicai", extra = "xpu" } },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
     { name = "soundfile", specifier = ">=0.13.1" },
-    { name = "torch", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = "==2.9.1+xpu", index = "https://download.pytorch.org/whl/xpu" },
-    { name = "torchaudio", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = "==2.9.1+xpu", index = "https://download.pytorch.org/whl/xpu" },
+    { name = "torch", marker = "(sys_platform == 'linux' and extra == 'xpu') or (sys_platform == 'win32' and extra == 'xpu')", specifier = "==2.9.1+xpu", index = "https://download.pytorch.org/whl/xpu", conflict = { package = "musicai", extra = "xpu" } },
+    { name = "torch", marker = "extra == 'cpu'", specifier = "==2.9.1" },
+    { name = "torchaudio", marker = "(sys_platform == 'linux' and extra == 'xpu') or (sys_platform == 'win32' and extra == 'xpu')", specifier = "==2.9.1+xpu", index = "https://download.pytorch.org/whl/xpu", conflict = { package = "musicai", extra = "xpu" } },
+    { name = "torchaudio", marker = "extra == 'cpu'", specifier = "==2.9.1" },
     { name = "torchcodec", specifier = ">=0.10.0" },
-    { name = "torchvision", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = "==0.24.1+xpu", index = "https://download.pytorch.org/whl/xpu" },
+    { name = "torchvision", marker = "(sys_platform == 'linux' and extra == 'xpu') or (sys_platform == 'win32' and extra == 'xpu')", specifier = "==0.24.1+xpu", index = "https://download.pytorch.org/whl/xpu", conflict = { package = "musicai", extra = "xpu" } },
+    { name = "torchvision", marker = "extra == 'cpu'", specifier = "==0.24.1" },
     { name = "tqdm", specifier = ">=4.67.2" },
     { name = "transformers", specifier = ">=4.40.0" },
 ]
+provides-extras = ["cpu", "xpu"]
 
 [[package]]
 name = "networkx"
@@ -1048,8 +1064,8 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "scipy" },
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c1/0a/720b3ebfa8efe8ac964a89e45964a5f500e2825e5e0566291f88ecc55f43/nnaudio-0.3.4.tar.gz", hash = "sha256:bda234f99c11dd7806e13593d607fdd258b86d87dc6735e810e0d8ce57fd3711", size = 39505, upload-time = "2025-12-07T23:20:41.887Z" }
 wheels = [
@@ -1920,6 +1936,33 @@ wheels = [
 
 [[package]]
 name = "torch"
+version = "2.9.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
+    "python_full_version >= '3.13' and sys_platform == 'darwin'",
+    "python_full_version < '3.13' and sys_platform == 'darwin'",
+]
+dependencies = [
+    { name = "filelock", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "fsspec", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "jinja2", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "networkx", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "setuptools", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "sympy", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "typing-extensions", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/ab/07739fd776618e5882661d04c43f5b5586323e2f6a2d7d84aac20d8f20bd/torch-2.9.1-cp312-none-macosx_11_0_arm64.whl", hash = "sha256:c0d25d1d8e531b8343bea0ed811d5d528958f1dcbd37e7245bc686273177ad7e", size = 74479191, upload-time = "2025-11-12T15:21:25.816Z" },
+    { url = "https://files.pythonhosted.org/packages/28/0e/2a37247957e72c12151b33a01e4df651d9d155dd74d8cfcbfad15a79b44a/torch-2.9.1-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:5be4bf7496f1e3ffb1dd44b672adb1ac3f081f204c5ca81eba6442f5f634df8e", size = 74830751, upload-time = "2025-11-12T15:21:43.792Z" },
+    { url = "https://files.pythonhosted.org/packages/40/60/71c698b466dd01e65d0e9514b5405faae200c52a76901baf6906856f17e4/torch-2.9.1-cp313-none-macosx_11_0_arm64.whl", hash = "sha256:2c14b3da5df416cf9cb5efab83aa3056f5b8cd8620b8fde81b4987ecab730587", size = 74480347, upload-time = "2025-11-12T15:21:57.648Z" },
+    { url = "https://files.pythonhosted.org/packages/48/50/c4b5112546d0d13cc9eaa1c732b823d676a9f49ae8b6f97772f795874a03/torch-2.9.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:1edee27a7c9897f4e0b7c14cfc2f3008c571921134522d5b9b5ec4ebbc69041a", size = 74433245, upload-time = "2025-11-12T15:22:39.027Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/b2/2d15a52516b2ea3f414643b8de68fa4cb220d3877ac8b1028c83dc8ca1c4/torch-2.9.1-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:cb10896a1f7fedaddbccc2017ce6ca9ecaaf990f0973bdfcf405439750118d2c", size = 74823558, upload-time = "2025-11-12T15:22:43.392Z" },
+]
+
+[[package]]
+name = "torch"
 version = "2.9.1+xpu"
 source = { registry = "https://download.pytorch.org/whl/xpu" }
 resolution-markers = [
@@ -1970,8 +2013,8 @@ wheels = [
 ]
 
 [[package]]
-name = "torch"
-version = "2.10.0"
+name = "torchaudio"
+version = "2.9.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
@@ -1980,20 +2023,14 @@ resolution-markers = [
     "python_full_version < '3.13' and sys_platform == 'darwin'",
 ]
 dependencies = [
-    { name = "filelock", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "fsspec", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "jinja2", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "networkx", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "setuptools", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "sympy", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "typing-extensions", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/5c/dee910b87c4d5c0fcb41b50839ae04df87c1cfc663cf1b5fca7ea565eeaa/torch-2.10.0-cp312-none-macosx_11_0_arm64.whl", hash = "sha256:6d3707a61863d1c4d6ebba7be4ca320f42b869ee657e9b2c21c736bf17000294", size = 79498198, upload-time = "2026-01-21T16:24:34.704Z" },
-    { url = "https://files.pythonhosted.org/packages/1a/0b/39929b148f4824bc3ad6f9f72a29d4ad865bcf7ebfc2fa67584773e083d2/torch-2.10.0-cp313-cp313t-macosx_14_0_arm64.whl", hash = "sha256:3202429f58309b9fa96a614885eace4b7995729f44beb54d3e4a47773649d382", size = 79851305, upload-time = "2026-01-21T16:24:09.209Z" },
-    { url = "https://files.pythonhosted.org/packages/0e/13/e76b4d9c160e89fff48bf16b449ea324bda84745d2ab30294c37c2434c0d/torch-2.10.0-cp313-none-macosx_11_0_arm64.whl", hash = "sha256:cdf2a523d699b70d613243211ecaac14fe9c5df8a0b0a9c02add60fb2a413e0f", size = 79498248, upload-time = "2026-01-21T16:23:09.315Z" },
-    { url = "https://files.pythonhosted.org/packages/4f/93/716b5ac0155f1be70ed81bacc21269c3ece8dba0c249b9994094110bfc51/torch-2.10.0-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:bf0d9ff448b0218e0433aeb198805192346c4fd659c852370d5cc245f602a06a", size = 79464992, upload-time = "2026-01-21T16:23:05.162Z" },
-    { url = "https://files.pythonhosted.org/packages/d8/94/71994e7d0d5238393df9732fdab607e37e2b56d26a746cb59fdb415f8966/torch-2.10.0-cp314-cp314t-macosx_14_0_arm64.whl", hash = "sha256:f5ab4ba32383061be0fb74bda772d470140a12c1c3b58a0cfbf3dae94d164c28", size = 79850324, upload-time = "2026-01-21T16:22:09.494Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/83/71cbadd7b66753818b5775f2088bad4f721d581de276996df4968000a626/torchaudio-2.9.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:7581ef170794c599aed55918e00d0acd9e5c9a0f19400c9a9a840955180365c5", size = 808098, upload-time = "2025-11-12T15:26:01.408Z" },
+    { url = "https://files.pythonhosted.org/packages/c0/1b/3321ad6379ac2d968064704e8d015c31ccae5d1ece070f87fb44b17d90e6/torchaudio-2.9.1-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:bb69557484c92513a980027ec4cb314b0f43cf4442bbfd97440e66528dbad22d", size = 808136, upload-time = "2025-11-12T15:26:00.276Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/58/e82d8b5f447abdddc950965f1395f36baef3602643dd069100c6369ba73e/torchaudio-2.9.1-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:9290f6a6409deb1f9113d5aef97ec646eeee6410b6bcc57ab8b57066b54da7c1", size = 813456, upload-time = "2025-11-12T15:26:13.963Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/38/0dabf362f946ab5773d3db3322718d652d70ad12a82f500d54c6c8b9cc88/torchaudio-2.9.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:69a582650279ee16ff9087f99b4234fe5d766e1bf7f0be352db5f46991854c1e", size = 810496, upload-time = "2025-11-12T15:26:11.515Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/f6/237e00a04dea497a40a8567d024dfb39193abec3ca3695ad51919ad633d1/torchaudio-2.9.1-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:e13cb38971ac259fc4e102282a3e48f6df5f0ab00eb785ca5155e3392d1e86f1", size = 813463, upload-time = "2025-11-12T15:26:16.261Z" },
 ]
 
 [[package]]
@@ -2018,27 +2055,6 @@ wheels = [
     { url = "https://download.pytorch.org/whl/xpu/torchaudio-2.9.1%2Bxpu-cp314-cp314-win_amd64.whl", hash = "sha256:a84796c673dc5096797c2164eb9b7fef8a3c1422c0940babc1016b9535f0fe90" },
     { url = "https://download.pytorch.org/whl/xpu/torchaudio-2.9.1%2Bxpu-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:0f0357269522f00fc1435604d80ae44c672692df341aa1986420686ae1c6759d" },
     { url = "https://download.pytorch.org/whl/xpu/torchaudio-2.9.1%2Bxpu-cp314-cp314t-win_amd64.whl", hash = "sha256:3c7095c629e4878bb77e32773e935a70a8a4929293ee31dadd1f82c0e122ab44" },
-]
-
-[[package]]
-name = "torchaudio"
-version = "2.10.0"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
-    "python_full_version >= '3.13' and sys_platform == 'darwin'",
-    "python_full_version < '3.13' and sys_platform == 'darwin'",
-]
-dependencies = [
-    { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0f/36/28a6f3e857616cf7576bdbf8170e483b8c5d0a1f8d349ecb2b75921236aa/torchaudio-2.10.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:9d0fbdbfd2f621c51d28571050d6d0c7287791034e5c7303b31480af1258f33f", size = 737144, upload-time = "2026-01-21T16:28:44.189Z" },
-    { url = "https://files.pythonhosted.org/packages/b6/02/341e7bd588355f82c5180103cb2f8070a72ab1be920ab27553a1135d4aa6/torchaudio-2.10.0-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:8fd38d28ee150c584d3ee3b05f39e021f0ad8a8ec8fec1f26dfe150c9db9b2f5", size = 737164, upload-time = "2026-01-21T16:28:38.354Z" },
-    { url = "https://files.pythonhosted.org/packages/48/29/30bcce0f17a8279b051b09250993691a828f89a03278306b23571c18df04/torchaudio-2.10.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:6cfe98ef0ea9bee6d6297493ce67ce0c54a38d80caf6535a3ae48900fd5f3769", size = 742449, upload-time = "2026-01-21T16:28:29.556Z" },
-    { url = "https://files.pythonhosted.org/packages/cc/5c/0e54b162bd0d1ec2f87b545553af839f906b940888d0122cdef04b965385/torchaudio-2.10.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:1f2897fbf776d55afcb5f6d9b7bdfaea850ca7a129c8f5e4b3a4b025c431130d", size = 739544, upload-time = "2026-01-21T16:28:26.947Z" },
-    { url = "https://files.pythonhosted.org/packages/c1/9b/cd02f8add38bd98761548b0821a5e54c564117a9bbeafaf95f665ab0fd72/torchaudio-2.10.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:13bdc1bde0c88e999699d1503304a56fc9dea6401b76bc08a5f268368129d46c", size = 742453, upload-time = "2026-01-21T16:28:20.989Z" },
 ]
 
 [[package]]
@@ -2072,6 +2088,29 @@ wheels = [
 
 [[package]]
 name = "torchvision"
+version = "0.24.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
+    "python_full_version < '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
+    "python_full_version >= '3.13' and sys_platform == 'darwin'",
+    "python_full_version < '3.13' and sys_platform == 'darwin'",
+]
+dependencies = [
+    { name = "numpy", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "pillow", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f0/af/18e2c6b9538a045f60718a0c5a058908ccb24f88fde8e6f0fc12d5ff7bd3/torchvision-0.24.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:e48bf6a8ec95872eb45763f06499f87bd2fb246b9b96cb00aae260fda2f96193", size = 1891433, upload-time = "2025-11-12T15:25:03.232Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/97/ab40550f482577f2788304c27220e8ba02c63313bd74cf2f8920526aac20/torchvision-0.24.1-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:8a6696db7fb71eadb2c6a48602106e136c785642e598eb1533e0b27744f2cce6", size = 1891435, upload-time = "2025-11-12T15:25:28.642Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/f3/a90a389a7e547f3eb8821b13f96ea7c0563cdefbbbb60a10e08dda9720ff/torchvision-0.24.1-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:e3f96208b4bef54cd60e415545f5200346a65024e04f29a26cd0006dbf9e8e66", size = 2005342, upload-time = "2025-11-12T15:25:11.871Z" },
+    { url = "https://files.pythonhosted.org/packages/42/84/577b2cef8f32094add5f52887867da4c2a3e6b4261538447e9b48eb25812/torchvision-0.24.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:cccf4b4fec7fdfcd3431b9ea75d1588c0a8596d0333245dafebee0462abe3388", size = 2005319, upload-time = "2025-11-12T15:25:23.827Z" },
+    { url = "https://files.pythonhosted.org/packages/50/33/481602c1c72d0485d4b3a6b48c9534b71c2957c9d83bf860eb837bf5a620/torchvision-0.24.1-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:ec9d7379c519428395e4ffda4dbb99ec56be64b0a75b95989e00f9ec7ae0b2d7", size = 2005336, upload-time = "2025-11-12T15:25:27.225Z" },
+]
+
+[[package]]
+name = "torchvision"
 version = "0.24.1+xpu"
 source = { registry = "https://download.pytorch.org/whl/xpu" }
 resolution-markers = [
@@ -2094,29 +2133,6 @@ wheels = [
     { url = "https://download.pytorch.org/whl/xpu/torchvision-0.24.1%2Bxpu-cp314-cp314-win_amd64.whl", hash = "sha256:aa94d1586c284f271f298b0bf5956ba840e11c94415793720605720fe7d6307f" },
     { url = "https://download.pytorch.org/whl/xpu/torchvision-0.24.1%2Bxpu-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:302ad80ec44f973512ab244464be2a323c20f918e86443ca9300c6e9db00fc66" },
     { url = "https://download.pytorch.org/whl/xpu/torchvision-0.24.1%2Bxpu-cp314-cp314t-win_amd64.whl", hash = "sha256:08b65fe80545965fc9d269670dbbb37709aa52a4114567783b1cbcff53048fb0" },
-]
-
-[[package]]
-name = "torchvision"
-version = "0.25.0"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
-    "python_full_version < '3.13' and sys_platform != 'darwin' and sys_platform != 'linux' and sys_platform != 'win32'",
-    "python_full_version >= '3.13' and sys_platform == 'darwin'",
-    "python_full_version < '3.13' and sys_platform == 'darwin'",
-]
-dependencies = [
-    { name = "numpy", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "pillow", marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/56/3a/6ea0d73f49a9bef38a1b3a92e8dd455cea58470985d25635beab93841748/torchvision-0.25.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c2abe430c90b1d5e552680037d68da4eb80a5852ebb1c811b2b89d299b10573b", size = 1874920, upload-time = "2026-01-21T16:27:45.348Z" },
-    { url = "https://files.pythonhosted.org/packages/f5/5b/1562a04a6a5a4cf8cf40016a0cdeda91ede75d6962cff7f809a85ae966a5/torchvision-0.25.0-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:24e11199e4d84ba9c5ee7825ebdf1cd37ce8deec225117f10243cae984ced3ec", size = 1874918, upload-time = "2026-01-21T16:27:39.02Z" },
-    { url = "https://files.pythonhosted.org/packages/52/99/dca81ed21ebaeff2b67cc9f815a20fdaa418b69f5f9ea4c6ed71721470db/torchvision-0.25.0-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:a8f8061284395ce31bcd460f2169013382ccf411148ceb2ee38e718e9860f5a7", size = 1896209, upload-time = "2026-01-21T16:27:32.159Z" },
-    { url = "https://files.pythonhosted.org/packages/9e/1f/fa839532660e2602b7e704d65010787c5bb296258b44fa8b9c1cd6175e7d/torchvision-0.25.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:620a236288d594dcec7634c754484542dc0a5c1b0e0b83a34bda5e91e9b7c3a1", size = 1896193, upload-time = "2026-01-21T16:27:24.785Z" },
-    { url = "https://files.pythonhosted.org/packages/97/36/96374a4c7ab50dea9787ce987815614ccfe988a42e10ac1a2e3e5b60319a/torchvision-0.25.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:ad9a8a5877782944d99186e4502a614770fe906626d76e9cd32446a0ac3075f2", size = 1896207, upload-time = "2026-01-21T16:27:23.383Z" },
 ]
 
 [[package]]
@@ -2222,10 +2238,10 @@ dependencies = [
     { name = "einops" },
     { name = "ftfy" },
     { name = "regex" },
+    { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torch", version = "2.9.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torch", version = "2.10.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
+    { name = "torchvision", version = "0.24.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torchvision", version = "0.24.1+xpu", source = { registry = "https://download.pytorch.org/whl/xpu" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-    { name = "torchvision", version = "0.25.0", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f3/d7/f056e8e114b85df6f30f7c22fd75fb273182306ea95b36c6f2089c8ff52a/x-clip-0.14.4.tar.gz", hash = "sha256:e2539953f1c81a2ab892843c2bc02c218f4ac410cf10ce37495830f6a0e259c6", size = 1355000, upload-time = "2023-10-16T15:04:08.619Z" }
 wheels = [
