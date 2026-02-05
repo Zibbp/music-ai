@@ -1,0 +1,54 @@
+[project]
+name = "musicai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "hdbscan>=0.8.41",
+    "librosa>=0.11.0",
+    "muq>=0.1.0",
+    "numpy>=2.3.5",
+    "pgvector>=0.4.2",
+    "psycopg[binary]>=3.3.2",
+    "pyyaml>=6.0.3",
+    "scikit-learn>=1.8.0",
+    "torch==2.9.1+xpu ; sys_platform == 'linux' or sys_platform == 'win32'",
+    "torchvision==0.24.1+xpu ; sys_platform == 'linux' or sys_platform == 'win32'",
+    "torchaudio==2.9.1+xpu ; sys_platform == 'linux' or sys_platform == 'win32'",
+    "pytorch-triton-xpu>=3.5.0 ; sys_platform == 'linux' or sys_platform == 'win32'",
+    "tqdm>=4.67.2",
+    "torchcodec>=0.10.0",
+    "soundfile>=0.13.1",
+    "transformers>=4.40.0",
+    "panns-inference>=0.1.1",
+]
+
+[project.scripts]
+musicai-init = "app.db:init_db"
+musicai-ingest = "app.ingest:main"
+musicai-learn-stats = "app.learn_stats:main"
+musicai-train-genre = "app.train_genre_clf:main"
+musicai-mix = "app.mix:main"
+musicai-mix-schedule = "app.mix_schedule:main"
+musicai-prefetch-mulan = "app.prefetch_mulan:main"
+musicai-navidrome = "app.navidrome_subsonic:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-xpu", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+torchvision = [{ index = "pytorch-xpu", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+torchaudio = [{ index = "pytorch-xpu", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+pytorch-triton-xpu = [{ index = "pytorch-xpu", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }]
+
+
+[[tool.uv.index]]
+name = "pytorch-xpu"
+url = "https://download.pytorch.org/whl/xpu"
+explicit = true

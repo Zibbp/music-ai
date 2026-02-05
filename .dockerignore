@@ -1,0 +1,11 @@
+.git
+.venv
+__pycache__
+*.pyc
+cache
+database
+models
+navidrome.db
+*.log
+*.tmp
+*.swp

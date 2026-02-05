@@ -1,0 +1,31 @@
+services:
+  db:
+    image: pgvector/pgvector:pg18-trixie
+    shm_size: 128mb
+    ports:
+      - "5432:5432" # Maps port 5432 on your host to port 5432 in the container
+    environment:
+      POSTGRES_PASSWORD: music
+      POSTGRES_USER: music
+      POSTGRES_DB: music
+    volumes:
+      - ./database:/var/lib/postgresql
+
+  musicai:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./models:/app/models:ro
+      - ./navidrome.db:/app/navidrome.db:ro
+      - /mnt/path/music:/mnt/path/music:ro
+      - ./cache:/app/cache
+    environment:
+      MUSICAI_DB_DSN: "postgresql://music:music@db:5432/music"
+      MUSICAI_DEVICE: "xpu"
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "render"
+      - "video"

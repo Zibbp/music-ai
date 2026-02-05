@@ -1,0 +1,104 @@
+# Postgres DSN for tracks/embeddings storage
+db_dsn: "postgresql://music:music@localhost:5432/music"
+# Device for inference ("cpu", "xpu")
+device: "xpu"
+
+# Target sample rate for all audio processing
+sr: 24000
+
+# Tracks per batch in ingest/training embedding
+batch_size: 32
+# Chunks per forward pass (memory/throughput knob)
+microbatch_chunks: 64
+# Number of loudest chunks kept per track
+active_keep: 4
+# Chunk length in seconds
+chunk_s: 10
+# Hop length in seconds (overlap control)
+hop_s: 4.0
+# Placeholder for loader workers (currently unused in embedding)
+load_workers: 4
+# Print timing breakdowns during ingest
+timing_breakdown: true
+ 
+# Local MuQ model path (avoid HF downloads)
+mulan_model_path: "models/OpenMuQ__MuQ-MuLan-large"
+# Force offline mode for HF/Transformers
+mulan_offline: true
+
+# Skip tracks already processed with same settings
+skip_if_ingested: true
+
+# Compute BPM during ingest (slower)
+compute_bpm: false
+
+# Allow fallback to best label even if low confidence
+family_allow_fallback: true
+# Allow fallback to best genre even if low confidence
+genre_allow_fallback: true
+# Use global genre bank instead of family-gated genre
+genre_global: true
+# Derive family from genre when possible
+family_from_genre: true
+# Store top-k label scores in DB
+return_topk: true
+# Number of top-k labels to store
+topk_n: 5
+
+# Optional: supervised genre classifier
+# Path to trained classifier .joblib
+genre_clf_path: "models/genre_clf.joblib"
+# Minimum classifier score to override prompt model
+genre_clf_min_score: 0.40
+
+# Navidrome/Subsonic integration (optional)
+# Base URL (e.g. http://localhost:4533 or https://host:port)
+subsonic_url: "https://navidrome"
+# Username
+subsonic_user: "usernane"
+# Password (plain or "enc:" prefixed)
+subsonic_password: "password"
+# Token auth (optional, use with subsonic_salt)
+# subsonic_token: ""
+# subsonic_salt: ""
+# API version and client name
+subsonic_version: "1.16.1"
+subsonic_client: "musicai"
+# Optional path prefix to strip before matching paths
+subsonic_path_strip_prefix: "/path/to/music"
+# Local music root to resolve seed paths without prefix
+music_path_prefix: "/path/to/music"
+# Subsonic search limit for song matching
+subsonic_search_limit: 50
+# Duration tolerance (seconds) when matching by title/artist
+subsonic_duration_tolerance_s: 3.0
+# Path to Navidrome sqlite DB for ID mapping
+subsonic_sqlite_db_path: "./navidrome.db"
+# Optional path prefix to strip before matching DB paths
+subsonic_sqlite_path_strip_prefix: "/path/to/music"
+
+# optionally stricter thresholds:
+# Family similarity threshold
+family_threshold: 0.14
+# Minimum margin between top-2 families
+family_margin: 0.03
+# Genre similarity threshold
+genre_threshold: 0.10
+# Minimum margin between top-2 genres
+genre_margin: 0.015
+
+# Mood similarity threshold
+mood_threshold: 0.10
+# Minimum margin between top-2 moods
+mood_margin: 0.01
+
+
+# learned BPM range uses percentiles; keeps mixes tight without you knowing BPM ranges up front
+# Low percentile for BPM range per (genre,mood)
+bpm_p_low: 10
+# High percentile for BPM range per (genre,mood)
+bpm_p_high: 90
+
+# Mix schedule lookback (days) for avoiding repeats
+mix_lookback_days_daily: 14
+mix_lookback_days_weekly: 30

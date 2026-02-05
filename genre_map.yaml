@@ -1,0 +1,71 @@
+mode: contains
+targets:
+  # Electronic / EDM
+  techno: ["techno", "hardtechno", "hard techno", "schranz", "hitech", "tekk", "hardtekk"]
+  house: ["house", "deep house", "tech house", "progressive house", "french house", "nu disco", "bass house", "tropical house"]
+  trance: ["trance", "uplifting", "vocal trance", "progressive trance", "hard trance", "tech trance"]
+  psytrance: ["psytrance", "psy", "goa"]
+  dubstep: ["dubstep", "brostep", "melodic dubstep", "drumstep"]
+  hard_dance: ["hardstyle", "hardstyle", "rawstyle", "happy hardcore", "hardcore techno", "frenchcore", "gabber", "uptempo", "jumpstyle", "nightcore"]
+  breaks: ["breakbeat", "breaks", "big beat"]
+  ambient_edm: ["ambient", "downtempo", "chillout", "chillstep", "dark ambient", "new age", "idm", "glitch", "vaporwave", "synthwave"]
+  edm_other: ["edm", "dance", "club", "rave", "electronic", "electronica", "electro", "electropop", "synth-pop", "future bass", "future garage", "wave"]
+
+  # Drum & Bass
+  dnb_jungle: ["jungle"]
+  dnb_liquid: ["liquid"]
+  dnb_neuro: ["neuro"]
+  dnb_jump_up: ["jump up", "jumpup"]
+  dnb_rollers: ["rollers"]
+  dnb_dancefloor: ["dancefloor dnb", "dancefloor drum and bass"]
+  dnb_other: ["drum and bass", "drum & bass", "dnb"]
+
+  # Metal
+  heavy_metal: ["heavy metal", "classic metal"]
+  thrash: ["thrash"]
+  death: ["death metal", "melodic death metal", "technical death metal"]
+  black: ["black metal", "symphonic black metal"]
+  power: ["power metal"]
+  doom: ["doom metal", "sludge", "stoner"]
+  metalcore: ["metalcore", "melodic metalcore", "deathcore", "easycore"]
+  industrial_metal: ["industrial metal", "electro-industrial"]
+  prog_metal: ["progressive metal", "djent", "mathcore", "post-metal"]
+  metal_other: ["metal", "nu metal", "alt metal", "alternative metal", "symphonic metal", "gothic metal", "groove metal", "viking metal", "folk metal", "glam metal", "speed metal"]
+
+  # Rock / Punk
+  alt_rock: ["alternative rock", "alt rock", "post-grunge"]
+  hard_rock: ["hard rock", "arena rock", "glam rock", "southern rock"]
+  indie_rock: ["indie rock", "indie", "dream pop", "math rock", "post-rock", "art rock", "piano rock"]
+  punk: ["punk", "punk rock"]
+  hardcore_punk: ["hardcore punk", "hardcore"]
+  post_hardcore: ["post-hardcore", "post hardcore"]
+  emo: ["emo", "emocore"]
+  pop_punk: ["pop punk"]
+  grunge: ["grunge"]
+  rock_other: ["rock", "rock and roll", "rock opera", "rock-pop", "pop rock", "electronic rock", "industrial rock", "gothic rock"]
+
+  # Hip hop / R&B
+  trap: ["trap"]
+  boom_bap: ["boom bap", "east coast hip hop"]
+  drill: ["drill"]
+  hiphop_pop: ["pop rap", "hip hop pop", "hiphop pop"]
+  phonk: ["phonk"]
+  rnb: ["r&b", "contemporary r&b", "neo soul", "soul"]
+  hiphop_other: ["hip hop", "rap", "horrorcore", "hardcore hip hop"]
+
+  # Classical / Jazz
+  classical: ["classical", "modern classical", "neoclassical"]
+  orchestral_score: ["orchestral"]
+  piano_solo: ["piano", "instrumental piano"]
+  jazz: ["jazz"]
+  blues: ["blues"]
+  swing: ["swing"]
+  cj_other: ["instrumental"]
+
+  # Soundtrack / World
+  film_score: ["film score", "film scores", "films", "soundtrack", "score"]
+  game_score: ["game", "games", "ost"]
+  anime_score: ["anime", "attack on titan", "aot"]
+  world: ["bhangra", "brasil", "brazilian", "world"]
+  regional_dance: ["regional dance"]
+  stw_other: ["soundtrack"]

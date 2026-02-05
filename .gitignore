@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+app/__pycache__
+
+# Virtual environments
+.venv
+database
+cache/
+models/OpenMuQ__MuQ-MuLan-large
+navidrome.db
+config.yaml
