@@ -21,6 +21,5 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 
 COPY app ./app
-COPY main.py README.md config.yaml genre_map.yaml ./
 
 CMD ["uv", "run", "musicai"]
