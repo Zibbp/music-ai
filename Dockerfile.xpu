@@ -37,6 +37,12 @@ RUN uv venv /app/.venv \
         --index-strategy unsafe-best-match \
         /tmp/requirements.txt
 
+# Fail the build if torch did not resolve to an XPU-enabled wheel.
+RUN /app/.venv/bin/python -c "import torch; v = torch.__version__.lower(); \
+assert '+xpu' in v, f'expected torch +xpu build, got {torch.__version__}'; \
+assert hasattr(torch, 'xpu'), 'torch.xpu API is missing'; \
+print('torch', torch.__version__, 'torch.version.xpu', getattr(torch.version, 'xpu', None))"
+
 COPY app ./app
 RUN uv pip install --python /app/.venv/bin/python --no-deps .
 

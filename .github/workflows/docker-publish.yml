@@ -57,7 +57,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            suffix=-cpu
+            prefix=cpu-
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -67,6 +67,7 @@ jobs:
         with:
           context: .
           dockerfile: Dockerfile.cpu
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_cpu.outputs.tags }}
           labels: ${{ steps.meta_cpu.outputs.labels }}
@@ -119,7 +120,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            suffix=-xpu
+            prefix=xpu-
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -129,6 +130,7 @@ jobs:
         with:
           context: .
           dockerfile: Dockerfile.xpu
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ steps.meta.outputs.tags }}
