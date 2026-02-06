@@ -71,8 +71,6 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_cpu.outputs.tags }}
           labels: ${{ steps.meta_cpu.outputs.labels }}
-          cache-from: type=gha,scope=cpu
-          cache-to: type=gha,mode=max,scope=cpu
 
   build-xpu:
 
@@ -136,5 +134,3 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ${{ steps.meta_xpu.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=xpu
-          cache-to: type=gha,mode=max,scope=xpu
