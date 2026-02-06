@@ -3,6 +3,7 @@ import json
 import os
 import re
 import sqlite3
+import unicodedata
 import urllib.parse
 import urllib.request
 
@@ -64,7 +65,37 @@ def _subsonic_call(cfg: dict, endpoint: str, params: dict) -> dict:
 
 
 def _normalize_path(p: str) -> str:
-    return p.replace("\\", "/").lower()
+    p = unicodedata.normalize("NFC", (p or ""))
+    p = p.replace("\\", "/")
+    parts = []
+    for part in p.split("/"):
+        part = unicodedata.normalize("NFC", part)
+        part = part.replace("\ufe0e", "").replace("\ufe0f", "").replace("\u200d", "")
+        part = part.casefold().strip()
+        if part:
+            parts.append(part)
+    return "/".join(parts)
+
+
+def _normalize_path_nospace(p: str) -> str:
+    return _normalize_path(p).replace(" ", "")
+
+
+def _path_suffix_match(path_a: str, path_b: str) -> bool:
+    a = _normalize_path(path_a)
+    b = _normalize_path(path_b)
+    if not a or not b:
+        return False
+    if a == b or a.endswith(f"/{b}") or b.endswith(f"/{a}"):
+        return True
+
+    a_ns = _normalize_path_nospace(path_a)
+    b_ns = _normalize_path_nospace(path_b)
+    return a_ns == b_ns or a_ns.endswith(f"/{b_ns}") or b_ns.endswith(f"/{a_ns}")
+
+
+def _escape_like(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 def _strip_prefix(path: str, prefix: str | None) -> str:
@@ -86,21 +117,38 @@ def _lookup_ids_sqlite(db_path: str, paths: list[str], strip_prefix: str | None)
     meta_map = {}
     missing = []
     try:
-        select_sql = "SELECT id, path, title, artist FROM media_file WHERE lower(path)=?"
-        select_like_sql = "SELECT id, path, title, artist FROM media_file WHERE lower(path) LIKE ?"
+        select_sql = "SELECT id, path, title, artist FROM media_file WHERE path=?"
+        select_like_sql = "SELECT id, path, title, artist FROM media_file WHERE path LIKE ? ESCAPE '\\' LIMIT 300"
         has_meta = True
         cur.execute("SELECT title, artist FROM media_file LIMIT 1")
     except Exception:
-        select_sql = "SELECT id, path FROM media_file WHERE lower(path)=?"
-        select_like_sql = "SELECT id, path FROM media_file WHERE lower(path) LIKE ?"
+        select_sql = "SELECT id, path FROM media_file WHERE path=?"
+        select_like_sql = "SELECT id, path FROM media_file WHERE path LIKE ? ESCAPE '\\' LIMIT 300"
         has_meta = False
 
     for p in paths:
         rel = _strip_prefix(p, strip_prefix)
-        norm = _normalize_path(rel)
-        row = cur.execute(select_sql, (norm,)).fetchone()
+        row = cur.execute(select_sql, (rel,)).fetchone()
         if not row:
-            row = cur.execute(select_like_sql, (f"%{norm}",)).fetchone()
+            rel_norm = rel.replace("\\", "/").lstrip("/")
+            parts = [x for x in rel_norm.split("/") if x]
+            patterns = []
+            if parts:
+                patterns.append(f"%{_escape_like(parts[-1])}")
+            if len(parts) >= 2:
+                patterns.append(f"%{_escape_like('/'.join(parts[-2:]))}")
+
+            candidates = []
+            seen_paths = set()
+            for pattern in patterns:
+                rows = cur.execute(select_like_sql, (pattern,)).fetchall()
+                for cand in rows:
+                    cpath = cand["path"]
+                    if cpath in seen_paths:
+                        continue
+                    seen_paths.add(cpath)
+                    candidates.append(cand)
+            row = next((cand for cand in candidates if _path_suffix_match(cand["path"], rel)), None)
         if row:
             id_map[p] = str(row["id"])
             if has_meta:
@@ -187,7 +235,7 @@ def _find_song_id(
 
     for s in songs:
         spath = s.get("path") or ""
-        if _normalize_path(spath).endswith(local_norm):
+        if _path_suffix_match(spath, local_norm):
             return s.get("id")
 
     best_id = None
@@ -352,6 +400,7 @@ def main():
 
     song_ids = []
     missing = []
+    missing_set = set()
     duplicates = []
     seen_keys = set()
 
@@ -375,9 +424,14 @@ def main():
     meta_map = {}
     db_path = cfg.get("subsonic_sqlite_db_path")
     strip_prefix = cfg.get("subsonic_sqlite_path_strip_prefix")
-    id_map, meta_map, missing = _lookup_ids_sqlite(db_path, paths, strip_prefix)
-    if missing:
-        print(f"SQLite mapping missed {len(missing)} paths; falling back to Subsonic search.")
+    id_map, meta_map, sqlite_missing = _lookup_ids_sqlite(db_path, paths, strip_prefix)
+    if sqlite_missing:
+        print(f"SQLite mapping missed {len(sqlite_missing)} paths; falling back to Subsonic search.")
+
+    def _add_missing(path: str) -> None:
+        if path not in missing_set:
+            missing_set.add(path)
+            missing.append(path)
 
     for r in rows:
         path = r.get("path")
@@ -392,7 +446,7 @@ def main():
                 debug=bool(args.debug_missing),
             )
         if not sid:
-            missing.append(path)
+            _add_missing(path)
             continue
         key = sid
         track_meta = meta_map.get(path)
