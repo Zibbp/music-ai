@@ -24,5 +24,8 @@ services:
     environment:
       MUSICAI_DB_DSN: "postgresql://music:music@db:5432/music"
       MUSICAI_DEVICE: "xpu"
+      HF_HOME: "/app/cache/huggingface"
+      HF_HUB_CACHE: "/app/cache/huggingface/hub"
+      TRANSFORMERS_CACHE: "/app/cache/huggingface/transformers"
     devices:
       - /dev/dri:/dev/dri

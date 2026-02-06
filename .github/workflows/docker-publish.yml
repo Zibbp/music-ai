@@ -51,14 +51,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
       - name: Extract Docker metadata (cpu)
         id: meta_cpu
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
@@ -76,10 +68,8 @@ jobs:
           context: .
           dockerfile: Dockerfile.cpu
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ steps.meta_cpu.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_cpu.outputs.tags }}
+          labels: ${{ steps.meta_cpu.outputs.labels }}
           cache-from: type=gha,scope=cpu
           cache-to: type=gha,mode=max,scope=cpu
 
@@ -115,6 +105,14 @@ jobs:
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
       - name: Extract Docker metadata (xpu)
         id: meta_xpu
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
@@ -132,8 +130,9 @@ jobs:
           context: .
           dockerfile: Dockerfile.xpu
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta_xpu.outputs.tags }}
-          labels: ${{ steps.meta_xpu.outputs.labels }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ steps.meta_xpu.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=xpu
           cache-to: type=gha,mode=max,scope=xpu
-
