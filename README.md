@@ -15,6 +15,10 @@ Using the custon genre classifier I can ensure the genres/families is how I want
 
 The Navidrome/Subsonic mix playlist logic assumes access to a copy of the navidrome.db sqlite file to fetch track IDs to use in Subsonic API queries.
 
+Daily mix playlist example:
+
+![daily mix](.github/images/daily_mix_playlist.png)
+
 ## Requirements
 
 - Python 3.12
@@ -191,17 +195,4 @@ Notes:
 
 ## Other Entry Points
 
-All commands should be prefixed with `uv run`:
-
-- `musicai-init`
-- `musicai-ingest`
-- `musicai-learn-stats`
-- `musicai-recommend`
-- `musicai-discover`
-- `musicai-sweep`
-- `musicai-train-genre`
-- `musicai-compare-genre`
-- `musicai-mix`
-- `musicai-mix-schedule`
-- `musicai-prefetch-mulan`
-- `musicai-navidrome`
+All commands should be prefixed with `uv run` if running locally.
